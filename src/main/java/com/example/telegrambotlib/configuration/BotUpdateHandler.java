@@ -1,10 +1,6 @@
 package com.example.telegrambotlib.configuration;
 
-import com.example.telegrambotlib.configuration.BotConfiguration;
 import com.example.telegrambotlib.easybot.annotation.BotController;
-import com.example.telegrambotlib.easybot.annotation.HandleMessage;
-import com.example.telegrambotlib.easybot.annotation.HandleUndefined;
-import com.example.telegrambotlib.easybot.annotation.HandleUserStep;
 import com.example.telegrambotlib.easybot.SmartBotConfiguration;
 import com.example.telegrambotlib.entity.User;
 import com.example.telegrambotlib.util.*;
@@ -30,7 +26,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Component
 @BotController
-public class BotService extends TelegramLongPollingBot {
+public class BotUpdateHandler extends TelegramLongPollingBot {
 
 
     private final BotConfiguration botConfiguration;

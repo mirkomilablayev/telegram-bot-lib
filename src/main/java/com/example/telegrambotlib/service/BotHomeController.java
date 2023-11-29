@@ -1,6 +1,6 @@
 package com.example.telegrambotlib.service;
 
-import com.example.telegrambotlib.configuration.BotService;
+import com.example.telegrambotlib.configuration.BotUpdateHandler;
 import com.example.telegrambotlib.easybot.annotation.BotController;
 import com.example.telegrambotlib.easybot.annotation.HandleMessage;
 import com.example.telegrambotlib.easybot.annotation.HandleUndefined;
@@ -18,14 +18,14 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 @AllArgsConstructor
 public class BotHomeController {
 
-    private final BotService botService;
+    private final BotUpdateHandler botUpdateHandler;
 
     @HandleMessage("/start")
     public void start(Update update, User user) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId(user.getChatId());
         sendMessage.setText("/start");
-        botService.sendMessageExecutor(sendMessage);
+        botUpdateHandler.sendMessageExecutor(sendMessage);
     }
 
     @HandleUserStep(Steps.ASK_CONTACT)
@@ -35,6 +35,7 @@ public class BotHomeController {
 
     @HandleUndefined
     public void undefined(Update update, User user) {
+
     }
 
 

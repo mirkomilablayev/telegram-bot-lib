@@ -1,6 +1,6 @@
 package com.example.telegrambotlib.util;
 
-import com.example.telegrambotlib.configuration.BotService;
+import com.example.telegrambotlib.configuration.BotUpdateHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboard;
@@ -18,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ButtonService {
 
-    private final BotService botService;
+    private final BotUpdateHandler botUpdateHandler;
 
     public ReplyKeyboardMarkup shareContactButton() {
         KeyboardButton keyboardButton = new KeyboardButton();
