@@ -1,4 +1,4 @@
-package com.example.telegrambotlib.util;
+package com.example.telegrambotlib.service;
 
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;

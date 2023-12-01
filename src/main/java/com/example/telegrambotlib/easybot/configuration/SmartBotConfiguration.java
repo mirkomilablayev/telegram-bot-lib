@@ -1,4 +1,4 @@
-package com.example.telegrambotlib.easybot;
+package com.example.telegrambotlib.easybot.configuration;
 
 import com.example.telegrambotlib.easybot.annotation.HandleMessageExecutor;
 import com.example.telegrambotlib.easybot.annotation.HandleUndefinedExecutor;
@@ -10,11 +10,12 @@ public class SmartBotConfiguration {
     private final HandleMessageExecutor handleMessageExecutor;
     private final HandleUserStepExecutor handleUserStepExecutor;
     private final HandleUndefinedExecutor handleUndefinedExecutor;
+    // Add other handlers as needed
 
-    public SmartBotConfiguration(String basePackage) {
-        handleMessageExecutor = new HandleMessageExecutor(basePackage);
-        handleUserStepExecutor = new HandleUserStepExecutor(basePackage);
-        handleUndefinedExecutor = new HandleUndefinedExecutor(basePackage);
+    public SmartBotConfiguration(Object botInstance) {
+        handleMessageExecutor = new HandleMessageExecutor(botInstance);
+        handleUserStepExecutor = new HandleUserStepExecutor(botInstance);
+        handleUndefinedExecutor = new HandleUndefinedExecutor(botInstance);
     }
 
     public void handleUpdate(User user, Update update) {
@@ -22,7 +23,7 @@ public class SmartBotConfiguration {
         if (!handle) {
             Boolean aBoolean = handleUserStepExecutor.handleUserStep(user, update);
             if (!aBoolean) {
-                handleUndefinedExecutor.handleUndefined(update, user);
+                handleUndefinedExecutor.handle(update, user);
             }
         }
     }

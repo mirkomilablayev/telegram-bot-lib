@@ -1,4 +1,4 @@
-package com.example.telegrambotlib.util;
+package com.example.telegrambotlib.service;
 
 import com.example.telegrambotlib.entity.User;
 import com.example.telegrambotlib.entity.UserRepository;

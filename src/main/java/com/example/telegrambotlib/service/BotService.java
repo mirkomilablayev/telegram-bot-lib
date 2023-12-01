@@ -1,12 +1,16 @@
-package com.example.telegrambotlib.configuration;
+package com.example.telegrambotlib.service;
 
-import com.example.telegrambotlib.easybot.annotation.BotController;
-import com.example.telegrambotlib.easybot.SmartBotConfiguration;
+import com.example.telegrambotlib.configuration.BotConfiguration;
+import com.example.telegrambotlib.easybot.annotation.HandleMessage;
+import com.example.telegrambotlib.easybot.annotation.HandleUndefined;
+import com.example.telegrambotlib.easybot.annotation.HandleUserStep;
+import com.example.telegrambotlib.easybot.configuration.SmartBotConfiguration;
 import com.example.telegrambotlib.entity.User;
-import com.example.telegrambotlib.util.*;
+import com.example.telegrambotlib.util.ButtonConst;
+import com.example.telegrambotlib.util.Steps;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.GetFile;
 import org.telegram.telegrambots.meta.api.methods.send.*;
@@ -24,14 +28,17 @@ import java.util.Comparator;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Component
-@BotController
-public class BotUpdateHandler extends TelegramLongPollingBot {
+@Service
+public class BotService extends TelegramLongPollingBot {
+
+
+    private static final SendMessage sendMessage = new SendMessage();
 
 
     private final BotConfiguration botConfiguration;
     private final LogicService logicService;
-
+    private final ButtonService buttonService;
+    private final InlineButtonService inlineButtonService;
 
 
     @Override
@@ -48,8 +55,48 @@ public class BotUpdateHandler extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         User currentUser = logicService.createUser(update);
-        SmartBotConfiguration smartBotConfiguration = new SmartBotConfiguration("com.example.telegrambotlib");
+        String chatId = logicService.getChatId(update);
+        sendMessage.setChatId(chatId);
+        SmartBotConfiguration smartBotConfiguration = new SmartBotConfiguration(this);
         smartBotConfiguration.handleUpdate(currentUser, update);
+    }
+
+
+    @HandleMessage("/start")
+    public void start(Update update, User user) {
+        sendMessage.setText("Telefon Raqamingizni yuboring");
+        sendMessage.setReplyMarkup(buttonService.shareContactButton());
+        user.setStep(Steps.ASK_CONTACT);
+        logicService.updateUser(user);
+        sendMessageExecutor(sendMessage);
+    }
+    @HandleUserStep(Steps.ASK_CONTACT)
+    public void registeredPage(Update update, User user) throws TelegramApiException {
+
+    }
+
+    @HandleMessage(ButtonConst.SINGLE)
+    public void singleButton(Update update, User user) throws TelegramApiException {
+
+    }
+
+
+
+
+    @HandleUndefined
+    public void undefined(Update update, User user) {
+        sendMessage.setText("Xato buyruq kiritildi");
+        try {
+            execute(sendMessage);
+        } catch (TelegramApiException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private SendMessage sendMessage(String chatId) {
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setChatId(chatId);
+        return sendMessage;
     }
 
 
